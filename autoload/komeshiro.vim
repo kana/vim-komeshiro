@@ -24,6 +24,7 @@
 " Variables  "{{{1
 
 let g:komeshiro_delay = 4000
+let g:komeshiro_duration = 8000
 
 let s:enabled = v:true
 
@@ -31,7 +32,7 @@ let s:fade_timer = 0
 let s:start_timer = 0
 
 let s:MIN_STEP = 0
-let s:MAX_STEP = 100
+let s:max_step = v:null
 let s:step = s:MIN_STEP
 let s:first_transparency = 0
 let s:LAST_TRANSPARENCY = 100
@@ -82,14 +83,18 @@ endfunction
 " Misc.  "{{{1
 
 function! komeshiro#_start(_timer)
+  let fps = 60
+  let t = float2nr(round(1000.0 / fps))
+  let s:max_step = float2nr(round(1.0 * g:komeshiro_duration / t))
   let s:step = s:MIN_STEP
-  let s:fade_timer = timer_start(10, 'komeshiro#_fade', {'repeat': s:MAX_STEP})
+
+  let s:fade_timer = timer_start(t, 'komeshiro#_fade', {'repeat': s:max_step})
 endfunction
 
 function! komeshiro#_fade(_timer)
   let s:step += 1
   let d = s:LAST_TRANSPARENCY - s:first_transparency
-  let t = s:first_transparency + 1.0 * d * s:step / s:MAX_STEP
+  let t = s:first_transparency + 1.0 * d * s:step / s:max_step
   let &transparency = float2nr(t)
 endfunction
 
