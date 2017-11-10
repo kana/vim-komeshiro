@@ -23,6 +23,8 @@
 " }}}
 " Variables  "{{{1
 
+let s:enabled = v:true
+
 let s:fade_timer = 0
 let s:start_timer = 0
 
@@ -42,15 +44,30 @@ let s:LAST_TRANSPARENCY = 100
 " Interface  "{{{1
 
 function! komeshiro#onFocusLost()
+  if !s:enabled
+    return
+  endif
+
   let s:first_transparency = &transparency
   let s:start_timer = timer_start(2000, 'komeshiro#_start')
 endfunction
 
 function! komeshiro#onFocusGained()
-  let &transparency = s:first_transparency
+  if !s:enabled
+    return
+  endif
 
+  let &transparency = s:first_transparency
   call timer_stop(s:start_timer)
   call timer_stop(s:fade_timer)
+endfunction
+
+function! komeshiro#enable()
+  let s:enabled = v:true
+endfunction
+
+function! komeshiro#disable()
+  let s:enabled = v:false
 endfunction
 
 
