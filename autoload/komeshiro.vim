@@ -23,6 +23,8 @@
 " }}}
 " Variables  "{{{1
 
+let g:komeshiro_delay = 4000
+
 let s:enabled = v:true
 
 let s:fade_timer = 0
@@ -49,7 +51,7 @@ function! komeshiro#onFocusLost()
   endif
 
   let s:first_transparency = &transparency
-  let s:start_timer = timer_start(2000, 'komeshiro#_start')
+  let s:start_timer = timer_start(g:komeshiro_delay, 'komeshiro#_start')
 endfunction
 
 function! komeshiro#onFocusGained()
